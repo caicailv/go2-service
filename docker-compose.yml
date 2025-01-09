@@ -1,12 +1,7 @@
 services:
-  nest-app:
-    image: node:18.17.0
+  go2-service:
+    build: .
     container_name: go2-service
-    working_dir: /opt/go2-service
-    volumes:
-      - .:/opt/go2-service
     ports:
       - "3322:3322"
-    command: ["npm", "run", "start:prod"]
-    environment:
-      - NODE_ENV=production
+    restart: always

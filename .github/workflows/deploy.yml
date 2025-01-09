@@ -1,0 +1,52 @@
+name: Deploy NestJS App to Docker
+
+on:
+  push:
+    branches:
+      - main  # 当推送到主分支时触发
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # 2. 设置 Docker 环境
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # 3. 构建 Docker 镜像并推送到服务器
+      - name: Build and Deploy Docker Image
+        env:
+          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          # 将 SSH 密钥保存到文件
+          echo "$PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+
+          # 使用 SSH 连接到服务器
+          ssh -o StrictHostKeyChecking=no -i private_key.pem $SERVER_USER@$SERVER_IP << EOF
+            # 进入部署路径
+            cd $DEPLOY_PATH
+
+            # 拉取最新的代码
+            git pull origin main
+
+            # 构建 Docker 镜像
+            docker-compose -f docker-compose.yml build
+
+            # 启动/重启 Docker 容器
+            docker-compose -f docker-compose.yml up -d
+
+            # 可选：如果你使用的是 PM2 或其他进程管理工具，也可以在这里重启它
+          EOF
+
+      # 4. 清理 SSH 密钥
+      - name: Clean up SSH private key
+        run: rm -f private_key.pem
