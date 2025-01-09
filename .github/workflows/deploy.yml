@@ -38,10 +38,13 @@ jobs:
             # 拉取最新的代码
             git pull origin main
 
+            # 停止并删除现有的容器
+            docker-compose -f docker-compose.yml down
+
             # 构建 Docker 镜像
             docker-compose -f docker-compose.yml build
 
-            # 启动/重启 Docker 容器
+            # 启动 Docker 容器
             docker-compose -f docker-compose.yml up -d
 
             # 可选：如果你使用的是 PM2 或其他进程管理工具，也可以在这里重启它
