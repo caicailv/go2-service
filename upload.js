@@ -5,6 +5,7 @@ const { exec, execSync } = require("child_process");
 const config = {
   // 打包后产物路径
   buildPath: path.resolve("./dist"),
+  serviceUser: "root@47.116.167.180",
   serviceFilePath: "/opt/",
 };
 
