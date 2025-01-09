@@ -32,6 +32,11 @@ jobs:
 
           # 使用 SSH 连接到服务器
           ssh -o StrictHostKeyChecking=no -i private_key.pem $SERVER_USER@$SERVER_IP << EOF
+            # 如果目录为空，先克隆 Git 仓库
+            if [ ! -d "$DEPLOY_PATH/.git" ]; then
+              git clone https://github.com/caicailv/go2-service.git $DEPLOY_PATH
+            fi
+
             # 进入部署路径
             cd $DEPLOY_PATH
 
