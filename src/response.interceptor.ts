@@ -12,7 +12,7 @@ interface StandardResponse<T> {
   code: number;
   msg: string;
   data: T | null;
-}
+} 
 
 @Injectable()
 export class ResponseInterceptor<T> implements NestInterceptor {
@@ -26,15 +26,13 @@ export class ResponseInterceptor<T> implements NestInterceptor {
     if (response.statusCode === 201) {
       response.statusCode = 200;
     }
-
     return next.handle().pipe(
       map((data) => {
         // 动态调整 msg 和 code
-        const message = this.getMessage(statusCode, data);
-
+        const message = this.getMessage(response.statusCode, data);
         // 返回标准化的响应
         return {
-          code: statusCode, // 动态设置状态码
+          code: response.statusCode, // 动态设置状态码
           msg: message, // 动态设置消息
           data: data ?? null, // 确保 data 不为 undefined
         };
