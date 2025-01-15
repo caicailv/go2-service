@@ -6,7 +6,7 @@ import { Express } from 'express';  // 这是关键，导入Express类型
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
-  @Post('image')
+  @Post()
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,

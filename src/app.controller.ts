@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body,Headers } from "@nestjs/common";
+import { Controller, Get, Post, Body, Headers } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { pool } from "./db";
 
@@ -22,18 +22,23 @@ export class AppController {
     return res?.[0];
   }
 
+  @Post("updateUserInfo")
+  async updateUserInfo(@Body() body: any) {
+    return await this.appService.updateUserInfo(body);
+  }
+
   // @Post("getUserInfo")
   // async getUserInfo(@Headers('Authorization') authorization: string) {
   //   console.log('authorization',authorization);
   //   return '123'
   //   // SELECT * FROM users WHERE openid = 'your_openid_value';
   // }
-  
+
   @Post("getUserInfo")
-  async getUserInfo(@Body('openid') openid: string) {
-    console.log('openid',openid);
-    const [res] = await pool.query(`SELECT * FROM users WHERE openid = '${openid}'`);
-    return res?.[0]  
-    // SELECT * FROM users WHERE openid = 'your_openid_value';
+  async getUserInfo(@Body("openid") openid: string) {
+    const [res] = await pool.query(
+      `SELECT * FROM users WHERE openid = '${openid}'`
+    );
+    return res?.[0];
   }
 }
