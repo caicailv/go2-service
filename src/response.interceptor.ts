@@ -23,6 +23,21 @@ export class ResponseInterceptor<T> implements NestInterceptor {
     const httpContext = context.switchToHttp();
     const response = httpContext.getResponse();
     const statusCode = response.statusCode; // 获取当前 HTTP 响应状态码
+    if (statusCode === 500) {
+      response.statusCode = 200; // 动态设置状态码
+      return next.handle().pipe(
+        map((data) => {
+          // 动态调整 msg 和 code
+          const message = this.getMessage(response.statusCode, data);
+          // 返回标准化的响应
+          return {
+            code: 500, // 动态设置状态码
+            msg: message, // 动态设置消息
+            data: undefined, // 确保 data 不为 undefined
+          };
+        }),
+      );
+    }
     if (response.statusCode === 201) {
       response.statusCode = 200;
     }
@@ -34,7 +49,7 @@ export class ResponseInterceptor<T> implements NestInterceptor {
         return {
           code: response.statusCode, // 动态设置状态码
           msg: message, // 动态设置消息
-          data: data ?? null, // 确保 data 不为 undefined
+          data: data ?? undefined, // 确保 data 不为 undefined
         };
       }),
     );

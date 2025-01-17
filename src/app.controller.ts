@@ -26,7 +26,10 @@ export class AppController {
   async updateUserInfo(@Body() body: any) {
     return await this.appService.updateUserInfo(body);
   }
-
+  @Post("editMap")
+  async editMap(@Body() body: any) {
+    return await this.appService.editMap(body);
+  }
   // @Post("getUserInfo")
   // async getUserInfo(@Headers('Authorization') authorization: string) {
   //   console.log('authorization',authorization);
@@ -40,5 +43,17 @@ export class AppController {
       `SELECT * FROM users WHERE openid = '${openid}'`
     );
     return res?.[0];
+  }
+
+  @Post("getMapList")
+  async getMapList(@Body("id") id: string) {
+    return await this.appService.getMapList({ id });
+  }
+  @Post("setLightMap")
+  async setLightMap(
+    @Headers("Authorization") openid: string,
+    @Body("mapid") mapid: string,
+  ) {
+    return await this.appService.setLightMap({ openid, mapid });
   }
 }
