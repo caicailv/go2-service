@@ -9,6 +9,7 @@ export class WeChatService {
   constructor(private readonly httpService: HttpService) {}
   // 获取微信小程序登录信息
   async loginWithCode(code: string): Promise<any> {
+    console.log('loginWithCode code',code);
     const url = `https://api.weixin.qq.com/sns/jscode2session?appid=${this.appid}&secret=${this.secret}&js_code=${code}&grant_type=authorization_code`;
 
     try {

@@ -5,7 +5,7 @@ import * as os from 'os';
 import * as dayjs from 'dayjs';
 import { Service, Client } from 'upyun';
 import { Express } from 'express';  // 这是关键，导入Express类型
-
+console.log('UPYUN_SERVICE_NAME',process.env.UPYUN_SERVICE_NAME);
 @Injectable()
 export class UploadService {
   private serviceName = process.env.UPYUN_SERVICE_NAME;
