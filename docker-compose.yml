@@ -19,8 +19,6 @@ services:
       UPYUN_DOMAIN_NAME: ${UPYUN_DOMAIN_NAME}
       UPYUN_OPERATOR_NAME: ${UPYUN_OPERATOR_NAME}
       UPYUN_OPERATOR_PASSWORD: ${UPYUN_OPERATOR_PASSWORD}
-    volumes:
-      - .:/app  # 将当前目录挂载到容器内的 /app 目录，确保本地代码可以实时更新到容器中
     networks:
       - go2-network
 
