@@ -19,6 +19,8 @@ services:
       UPYUN_DOMAIN_NAME: ${UPYUN_DOMAIN_NAME}
       UPYUN_OPERATOR_NAME: ${UPYUN_OPERATOR_NAME}
       UPYUN_OPERATOR_PASSWORD: ${UPYUN_OPERATOR_PASSWORD}
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
     networks:
       - go2-network
 
