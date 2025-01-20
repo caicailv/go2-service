@@ -5,8 +5,9 @@ services:
     build: .
     container_name: go2-service
     ports:
-      - "80:80"
+      # - "80:80"
       - "443:443"
+      - "8080:3322"
       # - "3322:3322"  # 映射容器的 3322 端口到宿主机的 3322 端口
     restart: always
     environment:
