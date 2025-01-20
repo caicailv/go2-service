@@ -5,7 +5,7 @@ services:
     build: .
     container_name: go2-service
     ports:
-      - "3322:3322"
+      - "3322:3322"  # 映射容器的 3322 端口到宿主机的 3322 端口
     restart: always
     environment:
       MYSQL_HOST: ${MYSQL_HOST}
@@ -19,20 +19,6 @@ services:
       UPYUN_DOMAIN_NAME: ${UPYUN_DOMAIN_NAME}
       UPYUN_OPERATOR_NAME: ${UPYUN_OPERATOR_NAME}
       UPYUN_OPERATOR_PASSWORD: ${UPYUN_OPERATOR_PASSWORD}
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    networks:
-      - go2-network
-
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - "80:80"
-      - "443:443"
-      - "3322:3322"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
     networks:
       - go2-network
 
