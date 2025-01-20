@@ -1,6 +1,9 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios'; // 导入正确的 HttpService
 import { AxiosResponse } from 'axios';
+import { Logger } from '@nestjs/common';
+
+const logger = new Logger('AppService'); 
 
 @Injectable()
 export class WeChatService {
