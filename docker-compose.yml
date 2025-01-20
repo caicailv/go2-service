@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   go2-service:
     build: .
@@ -5,3 +7,23 @@ services:
     ports:
       - "3322:3322"
     restart: always
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      JWT_SECRET: ${JWT_SECRET}
+      WE_CHAT_SECRET: ${WE_CHAT_SECRET}
+      WE_CHAT_APP_ID: ${WE_CHAT_APP_ID}
+      UPYUN_SERVICE_NAME: ${UPYUN_SERVICE_NAME}
+      UPYUN_DOMAIN_NAME: ${UPYUN_DOMAIN_NAME}
+      UPYUN_OPERATOR_NAME: ${UPYUN_OPERATOR_NAME}
+      UPYUN_OPERATOR_PASSWORD: ${UPYUN_OPERATOR_PASSWORD}
+    volumes:
+      - .:/app  # 将当前目录挂载到容器内的 /app 目录，确保本地代码可以实时更新到容器中
+    networks:
+      - go2-network
+
+networks:
+  go2-network:
+    driver: bridge
