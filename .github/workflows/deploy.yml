@@ -14,11 +14,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # 2. 设置 Docker 环境
+      # 2. 检查必需的 secrets 是否存在
+      - name: Check if all secrets are set
+        run: |
+          if [ -z "${{ secrets.SSH_PRIVATE_KEY }}" ] || [ -z "${{ secrets.SERVER_USER }}" ] || [ -z "${{ secrets.SERVER_IP }}" ] || [ -z "${{ secrets.DEPLOY_PATH }}" ] || [ -z "${{ secrets.MYSQL_HOST }}" ] || [ -z "${{ secrets.MYSQL_USER }}" ] || [ -z "${{ secrets.MYSQL_PASSWORD }}" ] || [ -z "${{ secrets.MYSQL_DATABASE }}" ] || [ -z "${{ secrets.UPYUN_SERVICE_NAME }}" ] || [ -z "${{ secrets.UPYUN_DOMAIN_NAME }}" ] || [ -z "${{ secrets.UPYUN_OPERATOR_NAME }}" ] || [ -z "${{ secrets.UPYUN_OPERATOR_PASSWORD }}" ] || [ -z "${{ secrets.JWT_SECRET }}" ] || [ -z "${{ secrets.WE_CHAT_SECRET }}" ] || [ -z "${{ secrets.WE_CHAT_APP_ID }}" ]; then
+            echo "Error: One or more required secrets are not set."
+            exit 1
+          else
+            echo "All required secrets are set."
+          fi
+
+      # 3. 设置 Docker 环境
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      # 3. 构建 Docker 镜像并推送到服务器
+      # 4. 构建 Docker 镜像并推送到服务器
       - name: Build and Deploy Docker Image
         env:
           PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -36,9 +46,6 @@ jobs:
           JWT_SECRET: ${{secrets.JWT_SECRET}}
           WE_CHAT_SECRET: ${{secrets.WE_CHAT_SECRET}}
           WE_CHAT_APP_ID: ${{secrets.WE_CHAT_APP_ID}}
-
-
-
 
         run: |
           # 将 SSH 密钥保存到文件
@@ -70,6 +77,6 @@ jobs:
             # 可选：如果你使用的是 PM2 或其他进程管理工具，也可以在这里重启它
           EOF
 
-      # 4. 清理 SSH 密钥
+      # 5. 清理 SSH 密钥
       - name: Clean up SSH private key
         run: rm -f private_key.pem
