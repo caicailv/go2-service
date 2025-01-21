@@ -4,9 +4,8 @@ import {
   ExecutionContext,
   CallHandler,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
+import { Observable,throwError  } from 'rxjs';
+import { map,catchError } from 'rxjs/operators';
 // 标准化的响应结构
 interface StandardResponse<T> {
   code: number;
@@ -24,7 +23,6 @@ export class ResponseInterceptor<T> implements NestInterceptor {
     const response = httpContext.getResponse();
     const statusCode = response.statusCode; // 获取当前 HTTP 响应状态码
     if (statusCode === 500) {
-      response.statusCode = 200; // 动态设置状态码
       return next.handle().pipe(
         map((data) => {
           // 动态调整 msg 和 code
@@ -36,10 +34,14 @@ export class ResponseInterceptor<T> implements NestInterceptor {
             data: undefined, // 确保 data 不为 undefined
           };
         }),
+        catchError((error) => {
+          return throwError(() => ({
+            code: statusCode,
+            msg: error.message,
+            data: null,
+          }));
+        }),
       );
-    }
-    if (response.statusCode === 201) {
-      response.statusCode = 200;
     }
     return next.handle().pipe(
       map((data) => {

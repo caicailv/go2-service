@@ -4,18 +4,16 @@ import * as path from 'path';
 import * as os from 'os';
 import * as dayjs from 'dayjs';
 import { Service, Client } from 'upyun';
-import { Express } from 'express';  // 这是关键，导入Express类型
-console.log('UPYUN_SERVICE_NAME',process.env.UPYUN_SERVICE_NAME);
+
+import { Express } from 'express'; 
 @Injectable()
 export class UploadService {
   private serviceName = process.env.UPYUN_SERVICE_NAME;
   private operatorName = process.env.UPYUN_OPERATOR_NAME;
   private operatorPassword = process.env.UPYUN_OPERATOR_PASSWORD;
   private domainName = process.env.UPYUN_DOMAIN_NAME;
-
   private service: Service;
   private client: Client;
-
   constructor() {
     this.service = new Service(
       this.serviceName,
@@ -56,7 +54,6 @@ export class UploadService {
     const uniqueFileName = this.generateUniqueFileName(file.originalname);
     const tempFilePath = path.join(tempDir, uniqueFileName);
     await fs.promises.writeFile(tempFilePath, file.buffer);
-
     return this.uploadImage(tempFilePath, imgPath);
   }
 }

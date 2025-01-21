@@ -22,27 +22,3 @@ export class WeChatController {
     return await this.weChatService.loginWithCode(code);
   }
 }
-
-/* 
-
-docker run -d \
-  --name mysql-container \
-  -e MYSQL_ROOT_PASSWORD=1309055307 \
-  -e MYSQL_DATABASE=ldp_database \
-  -p 3306:3306 \
-  -v /path/to/mysql/data:/var/lib/mysql \
-  mysql:latest
-
-docker exec -it 05013efbe8c3  bash
-
-
-  docker run -d \
-  --name mysql-container \
-  -e MYSQL_ROOT_PASSWORD=your_password \
-  -e MYSQL_DATABASE=your_database \
-  -e MYSQL_USER=your_user \
-  -e MYSQL_PASSWORD=your_user_password \
-  -p 3306:3306 \
-  -v /path/to/mysql/data:/var/lib/mysql \
-  mysql:latest
-*/

@@ -30,13 +30,6 @@ export class AppController {
   async editMap(@Body() body: any) {
     return await this.appService.editMap(body);
   }
-  // @Post("getUserInfo")
-  // async getUserInfo(@Headers('Authorization') authorization: string) {
-  //   console.log('authorization',authorization);
-  //   return '123'
-  //   // SELECT * FROM users WHERE openid = 'your_openid_value';
-  // }
-
   @Post("getUserInfo")
   async getUserInfo(@Body("openid") openid: string) {
     const [res] = await pool.query(

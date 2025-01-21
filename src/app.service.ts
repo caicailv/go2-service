@@ -1,3 +1,4 @@
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { Injectable } from "@nestjs/common";
 import { pool } from "./db";
 import { Controller, Get } from "@nestjs/common";
@@ -12,10 +13,12 @@ export class AppService {
   async getUsers() {
     return await pool.query("SELECT * FROM users");
   }
+  
 
   async updateUserInfo(body: any) {
     const {
       userId,
+      nickname,
       avatar_url,
       bio,
       gear_setup,
@@ -26,12 +29,15 @@ export class AppService {
       gender,
       gear_setup_img,
       skate_mileage,
-      honur_list, // 新增字段
+      honur_list, 
     } = body;
 
     let sql = "UPDATE users SET";
     const values = [];
-
+    if (avatar_url !== undefined) {
+      sql += " nickname = ?,";
+      values.push(nickname);
+    }
     if (avatar_url !== undefined) {
       sql += " avatar_url = ?,";
       values.push(avatar_url);
@@ -94,10 +100,12 @@ export class AppService {
     console.log("values", values);
     try {
       await pool.execute(sql, values);
-      return { msg: "ok", status: 200 };
+      return 
     } catch (error) {
-      console.error("Error updating user information:", error);
-      return { msg: "error", status: 500, data: error };
+      throw  {
+        status:500,
+        msg:error?.message||JSON.stringify(error)
+      }
     }
   }
 
@@ -155,6 +163,7 @@ export class AppService {
       sql += ` WHERE id = ${id}`;
     }
     const [res] = await pool.query(sql);
+    console.log('getMapList res',res);
     return res;
   }
 
