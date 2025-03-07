@@ -13,6 +13,78 @@ export class AppService {
   async getUsers() {
     return await pool.query("SELECT * FROM users");
   }
+
+  // 管理员创建新用户
+  async manageCreateUser(body: any) {
+    const {
+      nickname,
+      avatar_url,
+      bio,
+      gear_setup,
+      height,
+      weight,
+      age,
+      region,
+      gender,
+      gear_setup_img,
+      skate_mileage,
+      honur_list,
+    } = body;
+  
+    const fields: string[] = [];
+    const placeholders: string[] = [];
+    const values: any[] = [];
+  
+    // 动态构建字段和占位符
+    const addField = (fieldName: string, value: any, isJson = false) => {
+      if (value !== undefined) {
+        fields.push(fieldName);
+        placeholders.push("?");
+        values.push(isJson ? JSON.stringify(value) : value);
+      }
+    };
+  
+    addField("nickname", nickname);
+    addField("avatar_url", avatar_url);
+    addField("bio", bio);
+    addField("gear_setup", gear_setup);
+    addField("height", height);
+    addField("weight", weight);
+    addField("age", age);
+    addField("region", region);
+    addField("gender", gender);
+    addField("gear_setup_img", gear_setup_img);
+    addField("skate_mileage", skate_mileage);
+    addField("honur_list", honur_list, true); // 特殊处理 JSON 转换
+  
+    if (fields.length === 0) {
+      throw {
+        status: 400,
+        msg: "At least one user field must be provided"
+      };
+    }
+  
+    const sql = `
+      INSERT INTO users 
+      (${fields.join(", ")})
+      VALUES (${placeholders.join(", ")})
+    `;
+  
+    try {
+      const [result] = await pool.execute(sql, values) as any;
+      return { 
+        userId: result.insertId, // 返回 MySQL 自增 ID
+        message: "User created successfully" 
+      };
+    } catch (error) {
+      throw {
+        status: 500,
+        msg: error?.message || JSON.stringify(error)
+      };
+    }
+  }
+  
+  
   
 
   async updateUserInfo(body: any) {

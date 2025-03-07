@@ -22,16 +22,29 @@ export class AppController {
     return res?.[0];
   }
 
+  @Post("manageCreateUser")
+  async manageCreateUser(@Body() body: any) {
+    return await this.appService.manageCreateUser(body);
+  }
+
   @Post("updateUserInfo")
   async updateUserInfo(@Body() body: any) {
     return await this.appService.updateUserInfo(body);
   }
+  
   @Post("editMap")
   async editMap(@Body() body: any) {
     return await this.appService.editMap(body);
   }
   @Post("getUserInfo")
-  async getUserInfo(@Body("openid") openid: string) {
+  async getUserInfo(@Body("openid") openid: string,@Body("id") id: string) {
+
+    if(!openid) {
+        const [res] = await pool.query(
+          `SELECT * FROM users WHERE id = '${id}'`
+        );
+        return res?.[0];
+    }
     const [res] = await pool.query(
       `SELECT * FROM users WHERE openid = '${openid}'`
     );
