@@ -1,0 +1,29 @@
+name: Sync from Gitee
+on:
+  repository_dispatch:
+    types: [trigger-sync]
+  schedule:
+    - cron: '*/5 * * * *'  # 每5分钟同步一次
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Add Gitee remote
+        run: git remote add gitee https://gitee.com/caicailv1/go2-service.git
+
+      - name: Fetch from Gitee
+        run: git fetch gitee
+
+      - name: Merge changes
+        run: git merge gitee/master --allow-unrelated-histories
+
+      - name: Push to GitHub
+        run: git push origin master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
