@@ -28,6 +28,7 @@ export class AppService {
       gender,
       gear_setup_img,
       skate_mileage,
+      skate_year,
       honur_list,
     } = body;
   
@@ -55,6 +56,7 @@ export class AppService {
     addField("gender", gender);
     addField("gear_setup_img", gear_setup_img);
     addField("skate_mileage", skate_mileage);
+    addField("skate_year", skate_year);
     addField("honur_list", honur_list, true); // 特殊处理 JSON 转换
   
     if (fields.length === 0) {
@@ -101,6 +103,7 @@ export class AppService {
       gender,
       gear_setup_img,
       skate_mileage,
+      skate_year,
       honur_list, 
     } = body;
 
@@ -158,6 +161,12 @@ export class AppService {
       sql += " skate_mileage = ?,";
       values.push(skate_mileage);
     }
+    if (skate_year !== undefined) {
+      sql += " skate_year = ?,";
+      values.push(skate_year);
+    }
+
+    // 
     if (honur_list !== undefined) {
       // 添加 honur_list 字段处理
       sql += " honur_list = ?,";
